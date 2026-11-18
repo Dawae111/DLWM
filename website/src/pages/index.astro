@@ -1,0 +1,143 @@
+---
+import { benchmarks, results } from "../results";
+---
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>DLWM: Diverse Latent World Models for Efficient Multimodal Reasoning</title>
+  <meta name="description" content="DLWM explores several latent interpretations of an image and question, and learns how to allocate reasoning across them. Paper, code, figures, and citation.">
+  <link rel="canonical" href="https://dawae111.github.io/DLWM/">
+  <meta name="citation_title" content="DLWM: Diverse Latent World Models for Efficient Multimodal Reasoning">
+  <meta name="citation_author" content="David Huang">
+  <meta name="citation_author" content="Lianlei Shan">
+  <meta name="citation_publication_date" content="2026/06/13">
+  <meta name="citation_arxiv_id" content="2606.15160">
+  <meta name="citation_pdf_url" content="https://arxiv.org/pdf/2606.15160">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="DLWM: Diverse Latent World Models for Efficient Multimodal Reasoning">
+  <meta property="og:description" content="One image, several latent interpretations. Explore the method, figures, paper and code.">
+  <meta property="og:url" content="https://dawae111.github.io/DLWM/">
+  <meta property="og:image" content="https://raw.githubusercontent.com/Dawae111/DLWM/main/assets/overview.png">
+  <meta property="og:image:alt" content="Three ways of reasoning about the same image, from one path to several latent worlds.">
+  <link rel="icon" href="assets/worlds.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="styles.css">
+  <script is:inline src="project.js" defer></script>
+</head>
+<body>
+<a class="skip" href="#research">Skip to paper</a>
+<header>
+  <nav class="wrap" aria-label="Project navigation">
+    <a class="wordmark" href="#research"><img src="assets/worlds.svg" width="39" height="30" alt="">DLWM</a>
+    <div class="nav-links"><a href="#architecture">Method</a><a href="#results">Results</a><a href="#citation">Citation</a></div>
+  </nav>
+</header>
+<main id="research">
+  <section class="hero wrap" aria-labelledby="paper-title">
+    <div class="hero-copy">
+      <p class="meta"><a href="https://arxiv.org/abs/2606.15160v2">arXiv v2 · November 2026</a></p>
+      <h1 id="paper-title"><span class="title-main">DLWM: Diverse Latent World Models</span> <em>for Efficient Multimodal Reasoning</em></h1>
+      <p class="authors"><a href="https://dawae111.github.io/">David Huang</a><sup>1</sup><span>·</span><a href="https://scholar.google.com/citations?user=V5YWfWgAAAAJ">Lianlei Shan</a><sup>2</sup></p>
+      <p class="institutions"><sup>1</sup> University of Toronto <span>·</span> <sup>2</sup> Tsinghua University</p>
+      <p class="summary">DLWM keeps several interpretations of an image in parallel and learns which paths to expand, stop or merge before answering.</p>
+      <div class="actions"><a class="primary" href="https://arxiv.org/abs/2606.15160">Paper <span aria-hidden="true">↗</span></a><a class="secondary" href="https://github.com/Dawae111/DLWM">Code <span aria-hidden="true">↗</span></a></div>
+    </div>
+    <section class="example" id="example" aria-labelledby="example-question">
+      <h2 id="example-question">Are the benches facing the water or the path?</h2>
+      <div class="photos">
+        <figure>
+          <a data-view="Left photo · VQAv2" href="assets/coco-val2014-035767.jpg" aria-label="Open the left photo at full size"><img src="assets/coco-val2014-035767.jpg" width="640" height="426" alt="A bench beside the water, with a footpath curving past the trees on the right."></a>
+        </figure>
+        <figure>
+          <a data-view="Right photo · VQAv2" href="assets/coco-val2014-131965.jpg" aria-label="Open the right photo of the single bench at full size"><img src="assets/coco-val2014-131965.jpg" width="427" height="640" alt="A single bench viewed from across a stream, with a park path on the far side."></a>
+        </figure>
+      </div>
+      <details class="answers">
+        <summary>See answers from 10 people per photo</summary>
+        <dl>
+          <div><dt>Left photo</dt><dd>10 water</dd></div>
+          <div><dt>Right photo</dt><dd>6 path · 3 water · 1 other (“no”)</dd></div>
+        </dl>
+        <p class="source"><a href="https://visualqa.org/download.html">VQAv2 validation set ↗</a> · Question IDs 35767000 (left) and 131965002 (right)</p>
+      </details>
+    </section>
+  </section>
+
+  <section class="section wrap" id="paths" aria-labelledby="paths-title">
+    <div class="section-heading"><p class="meta">Figure 1 · Paper illustration</p><h2 id="paths-title">One question, several paths</h2></div>
+    <p class="intro">Which edge of a bench is the backrest? That small detail can change the answer. In Figure 1, a single reasoning path settles on one reading early. DLWM can carry competing readings forward before choosing an answer.</p>
+    <figure class="paper-figure"><a data-view="Figure 1 · One question, several paths" href="assets/reasoning-paths.webp" aria-label="Open Figure 1 at full size"><img loading="lazy" src="assets/reasoning-paths.webp" width="2400" height="1174" alt="Figure 1 depicts a separate lakeside scene and compares explicit reasoning, a single latent path and several DLWM paths."></a><figcaption><span><b>Figure 1.</b> The paper compares three reasoning strategies using a bench scene.</span><a data-view="Figure 1 · One question, several paths" href="assets/reasoning-paths.webp">Full size ↗</a></figcaption></figure>
+  </section>
+
+  <section class="section wrap" id="architecture" aria-labelledby="arch-title">
+    <div class="section-heading"><p class="meta">Figure 2 · Architecture</p><h2 id="arch-title">How DLWM reasons</h2></div>
+    <div class="method-layout">
+      <figure class="paper-figure"><a data-view="Figure 2 · How DLWM reasons" href="assets/architecture.webp" aria-label="Open Figure 2 at full size"><img loading="lazy" src="assets/architecture.webp" width="2400" height="1200" alt="DLWM architecture, from the vision-language encoder through world generation and controller actions to the weighted answer."></a><figcaption><span><b>Figure 2.</b> The generator, shared reasoner, controller, and prediction head.</span><a data-view="Figure 2 · How DLWM reasons" href="assets/architecture.webp">Full size ↗</a></figcaption></figure>
+      <div class="steps">
+        <div><h3>Form hypotheses</h3><p>Each world is a candidate interpretation of the image and question, represented by a latent vector. The generator learns to produce a diverse set of worlds.</p></div>
+        <div><h3>Allocate compute</h3><p>A shared Transformer updates the worlds. A learned controller spends its budget on expanding, stopping, or merging paths, and decides when to answer.</p></div>
+        <div><h3>Combine predictions</h3><p>Each surviving world predicts the next answer token. A learned score sets its weight in the final probability distribution.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section wrap" id="results" aria-labelledby="results-title">
+    <div class="section-heading"><p class="meta">Experiments</p><h2 id="results-title">Accuracy and inference cost</h2></div>
+    <p class="intro">DLWM has the highest reported accuracy on all four benchmarks among the methods shown. It also uses less memory than LVR and LaRe. Heima uses the least memory and has the highest throughput.</p>
+    <div class="result-tables">
+      <table><caption>Benchmark accuracy (%) <small>Table 1(a)</small></caption>
+        <thead><tr><th scope="col">Method</th>{benchmarks.map(name => <th scope="col">{name}</th>)}</tr></thead>
+        <tbody>
+          {results.map(row => (
+            <tr class:list={{ ours: row.method === 'DLWM' }}>
+              <th scope="row">{row.method}</th>
+              {row.accuracy.map(value => <td>{value.toFixed(1)}</td>)}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+      <table><caption>Inference cost <small>Table 1(b)</small></caption>
+        <thead><tr><th scope="col">Method</th><th scope="col">Memory (GB)</th><th scope="col">Samples/s</th></tr></thead>
+        <tbody>
+          {results.map(row => (
+            <tr class:list={{ ours: row.method === 'DLWM' }}>
+              <th scope="row">{row.method}</th>
+              {[row.memory, row.throughput].map(value => <td>{value.toFixed(1)}</td>)}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+    <a class="inline" href="https://arxiv.org/html/2606.15160v2#S4.T1">Complete comparison in Table 1 ↗</a>
+  </section>
+
+  <section class="section wrap" id="citation" aria-labelledby="citation-title">
+    <div class="citation-heading"><h2 id="citation-title">Code and citation</h2><button id="copy" type="button" hidden>Copy BibTeX</button></div>
+    <p class="intro">The <a href="https://github.com/Dawae111/DLWM#-quick-start">Quick Start</a> covers training on GQA, VQAv2 and ScienceQA. Evaluation also includes MMVP as a zero-shot benchmark. The <a href="https://github.com/Dawae111/DLWM/blob/main/REPRODUCIBILITY.md">reproducibility notes</a> describe the released configurations and how they relate to the paper. The original checkpoints, predictions and logs are unavailable in this release.</p>
+    <pre tabindex="0" role="region" aria-label="BibTeX citation"><code id="bibtex" is:raw>@misc{huang2026dlwmdiverselatentworld,
+      title={DLWM: Diverse Latent World Models for Efficient Multimodal Reasoning},&#32;
+      author={David Huang and Lianlei Shan},
+      year={2026},
+      eprint={2606.15160},
+      archivePrefix={arXiv},
+      primaryClass={cs.CV},
+      url={https://arxiv.org/abs/2606.15160},&#32;
+}</code></pre><span class="sr-only" id="copy-status" role="status"></span>
+    <details class="credits">
+      <summary>Photo credits</summary>
+      <p>Left photo · <a href="https://www.flickr.com/photos/ronsaunders47/8191468560/"><cite>Bare trees and benches.</cite></a> by Ronald Saunders · <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC BY-SA 2.0</a> (cropped preview)</p>
+      <p>Right photo · <a href="https://www.flickr.com/photos/17516529@N00/4369344433/"><cite>Bench Pavilion Gardens Buxton</cite></a> by jillyspoon · <a href="https://creativecommons.org/licenses/by-nd/2.0/">CC BY-ND 2.0</a></p>
+    </details>
+  </section>
+</main>
+<footer class="wrap"><a class="wordmark" href="#research"><img src="assets/worlds.svg" width="29" height="22" alt="">DLWM</a><div><a href="https://arxiv.org/abs/2606.15160">arXiv</a><a href="https://github.com/Dawae111/DLWM">GitHub</a></div></footer>
+<dialog id="viewer" aria-labelledby="viewer-title">
+  <div class="viewer-head">
+    <h2 id="viewer-title"></h2>
+    <div><button id="viewer-zoom" type="button">Zoom in</button><button id="viewer-close" type="button" autofocus>Close</button></div>
+  </div>
+  <div class="viewer-stage" tabindex="0" role="region" aria-label="Enlarged image"><img id="viewer-image" alt=""></div>
+</dialog>
+</body>
+</html>

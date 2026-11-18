@@ -1,0 +1,21 @@
+purpose: train
+output_dir: ./data/dlwm_official
+
+datasets:
+  - name: gqa
+    split: train_balanced
+    questions_file: ./data/gqa/train_balanced_questions.json
+    image_root: ./data/gqa/images
+
+  # VQAv2 is officially distributed on COCO train2014/val2014 images. The
+  # manuscript's "train2017/val2017" wording is treated as a documentation typo.
+  - name: vqav2
+    split: train2014
+    questions_file: ./data/vqav2/v2_OpenEnded_mscoco_train2014_questions.json
+    annotations_file: ./data/vqav2/v2_mscoco_train2014_annotations.json
+    image_root: ./data/vqav2/train2014
+
+  - name: scienceqa
+    split: train
+    source: huggingface
+    dataset: derek-thomas/ScienceQA

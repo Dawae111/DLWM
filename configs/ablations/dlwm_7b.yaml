@@ -1,0 +1,39 @@
+stage1_config: configs/train/dlwm_stage1_7b.yaml
+stage2_config: configs/train/dlwm_stage2_rl_7b.yaml
+eval_config: configs/eval/dlwm_7b.yaml
+
+experiments:
+  - name: full
+    overrides: {}
+  - name: worlds_1
+    overrides: {dlwm_num_worlds: 1, dlwm_enable_stop: false, dlwm_enable_merge: false}
+  - name: worlds_2
+    overrides: {dlwm_num_worlds: 2}
+  - name: worlds_8
+    overrides: {dlwm_num_worlds: 8}
+  - name: budget_4
+    overrides: {dlwm_compute_budget: 4}
+  - name: budget_8
+    overrides: {dlwm_compute_budget: 8}
+  - name: without_expand
+    overrides: {dlwm_enable_expand: false}
+  - name: without_stop
+    overrides: {dlwm_enable_stop: false}
+  - name: without_merge
+    overrides: {dlwm_enable_merge: false}
+  - name: diversity_none
+    overrides: {dlwm_diversity_regularizer: none}
+  - name: diversity_cosine
+    overrides: {dlwm_diversity_regularizer: cosine}
+  - name: diversity_contrastive
+    overrides: {dlwm_diversity_regularizer: contrastive}
+  - name: aggregation_mean
+    overrides: {dlwm_aggregation: mean_pooling}
+  - name: aggregation_max
+    overrides: {dlwm_aggregation: max_pooling}
+  - name: aggregation_last_world
+    overrides: {dlwm_aggregation: last_world}
+  - name: beta_fixed_half
+    overrides: {dlwm_merge_mode: fixed, dlwm_merge_fixed_beta: 0.5}
+  - name: beta_reference_similarity
+    overrides: {dlwm_merge_mode: reference_softmax}

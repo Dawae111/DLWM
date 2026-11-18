@@ -1,0 +1,29 @@
+schema_version: 1
+status: missing_original_run_artifacts
+note: >-
+  No checkpoint, trainer_state.json, W&B export, or evaluation output matching
+  the submitted numbers was present in this checkout. Populate the fields below
+  only from the original run; do not substitute a newly initialized model.
+
+paper_result_checkpoint:
+  uri: null
+  revision_or_step: null
+  sha256: null
+
+training:
+  stage1_config: configs/train/dlwm_stage1_7b.yaml
+  stage2_config: configs/train/dlwm_stage2_rl_7b.yaml
+  run_manifest: null
+  trainer_state: null
+  log_export: null
+  git_commit: null
+
+evaluation:
+  config: configs/eval/dlwm_7b.yaml
+  summary: null
+  prediction_files: []
+
+hardware:
+  accelerator: 8xA100
+  precision: bfloat16
+  source: manuscript_appendix

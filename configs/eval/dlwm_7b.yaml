@@ -1,0 +1,47 @@
+checkpoint: ./output/dlwm_stage2_rl_7b/checkpoint-1000
+output_dir: ./evaluation/results/dlwm_7b
+seed: 42
+warmup_batches: 3
+torch_dtype: bfloat16
+device_map: auto
+attn_implementation: sdpa
+
+dlwm:
+  hidden_size: 4096
+  use_rl: true
+  max_steps: 8
+  compute_budget: 10
+  merge_topk_pairs: 1
+  aggregation: probability_mixture
+
+generation:
+  max_new_tokens: 128
+  temperature: 0.0
+  num_beams: 1
+
+benchmarks:
+  - name: GQA
+    adapter: gqa
+    questions_file: ./data/gqa/testdev_balanced_questions.json
+    image_root: ./data/gqa/images
+    metric: gqa_accuracy
+
+  - name: VQAv2
+    adapter: vqav2
+    questions_file: ./data/vqav2/v2_OpenEnded_mscoco_val2014_questions.json
+    annotations_file: ./data/vqav2/v2_mscoco_val2014_annotations.json
+    image_root: ./data/vqav2/val2014
+    metric: vqa_soft
+
+  - name: ScienceQA
+    adapter: scienceqa
+    source: huggingface
+    dataset: derek-thomas/ScienceQA
+    split: test
+    metric: multiple_choice
+
+  - name: MMVP
+    adapter: mmvp
+    questions_file: ./data/mmvp/Questions.csv
+    image_root: ./data/mmvp/MMVP_Images
+    metric: multiple_choice
